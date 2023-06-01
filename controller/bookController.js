@@ -51,3 +51,24 @@ exports.getBookById = async (req, res) => {
     });
   }
 };
+
+exports.updateBookById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const newData = req.body;
+    const result = await bookModel.findByIdAndUpdate(id, newData, {
+      new: true,
+    });
+    if (result) {
+      res.status(200).json({
+        message: "Updated",
+        data: result,
+      });
+    }
+  } catch (error) {
+    res.status(400).json({
+      message: error.message,
+      data: "Failed",
+    });
+  }
+};
