@@ -1,11 +1,10 @@
 const router = require("express").Router();
-const bookController = require("../controller/bookController");
+const { createBook } = require("../controller/bookController");
 
 router.get("/", (req, res) => {
-  res.send("Working");
+  res.send("Api is working");
 });
 
-router.post("/books", bookController.createBook);
-// router.get("/books", bookController.retrieveAllBook);
+router.post("/books", createBook);
 
 module.exports = router;
