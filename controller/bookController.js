@@ -72,3 +72,23 @@ exports.updateBookById = async (req, res) => {
     });
   }
 };
+
+exports.deleteBookById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await bookModel.findByIdAndDelete(id);
+    if (result) {
+      res.status(200).json({
+        message: "Successfully deleted",
+      });
+    } else {
+      res.status(404).json({
+        message: "No book found with this id",
+      });
+    }
+  } catch (error) {
+    res.status(400).json({
+      message: error.message,
+    });
+  }
+};
