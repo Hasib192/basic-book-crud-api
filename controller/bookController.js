@@ -24,3 +24,30 @@ exports.createBook = async (req, res) => {
     })
     .catch((error) => console.log(error.message));
 };
+
+exports.getAllBooks = async (req, res) => {
+  const result = await bookModel.find({});
+  if (result.length == 0) {
+    res.status(400).send("Please add book first");
+  }
+  res.status(200).json({
+    result,
+  });
+};
+
+exports.getBookById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await bookModel.findById(id);
+    if (!result) throw new Error("Book not found");
+    res.status(200).json({
+      message: "success",
+      data: result,
+    });
+  } catch (error) {
+    res.status(400).json({
+      message: error.message,
+      data: null,
+    });
+  }
+};
