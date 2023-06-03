@@ -22,73 +22,95 @@ exports.createBook = async (req, res) => {
         data: saveBook,
       });
     })
-    .catch((error) => console.log(error.message));
+    .catch((error) => {
+      res.status(500).json({
+        msg: "Error. Please try again later",
+        error: error.message,
+      });
+    });
 };
 
 exports.getAllBooks = async (req, res) => {
-  const result = await bookModel.find({});
-  if (result.length == 0) {
-    res.status(400).send("Please add book first");
+  try {
+    const result = await bookModel.find(
+      {},
+      {
+        createdAt: 0,
+        updatedAt: 0,
+      }
+    );
+    if (!result) {
+      return res.status(404).json({
+        error: "No book found",
+      });
+    }
+    res.status(200).json({
+      msg: "All Book List",
+      result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      msg: "Error. Please try again later",
+      error: error.message,
+    });
   }
-  res.status(200).json({
-    result,
-  });
 };
 
 exports.getBookById = async (req, res) => {
+  const id = req.params.id;
   try {
-    const id = req.params.id;
     const result = await bookModel.findById(id);
-    if (!result) throw new Error("Book not found");
+    if (!result) {
+      return res.status(404).json({
+        error: "No book found",
+      });
+    }
     res.status(200).json({
-      message: "success",
-      data: result,
+      msg: "More about this book",
+      result,
     });
   } catch (error) {
-    res.status(400).json({
-      message: error.message,
-      data: null,
+    res.status(500).json({
+      msg: "Error. Please try again later",
+      error: error.message,
     });
   }
 };
 
 exports.updateBookById = async (req, res) => {
+  const id = req.params.id;
+  const newData = req.body;
   try {
-    const id = req.params.id;
-    const newData = req.body;
     const result = await bookModel.findByIdAndUpdate(id, newData, {
       new: true,
     });
     if (result) {
       res.status(200).json({
-        message: "Updated",
-        data: result,
+        msg: "Successfully updated",
+        result,
       });
     }
   } catch (error) {
     res.status(400).json({
-      message: error.message,
-      data: "Failed",
+      msg: "Error. Please try again later",
+      error: error.message,
     });
   }
 };
 
 exports.deleteBookById = async (req, res) => {
+  const id = req.params.id;
   try {
-    const id = req.params.id;
     const result = await bookModel.findByIdAndDelete(id);
     if (result) {
-      res.status(200).json({
-        message: "Successfully deleted",
-      });
-    } else {
-      res.status(404).json({
-        message: "No book found with this id",
+      res.status(204).json({
+        msg: "Successfully deleted",
       });
     }
   } catch (error) {
     res.status(400).json({
-      message: error.message,
+      msg: "Error. Please try again later",
+      error: error.message,
     });
   }
 };

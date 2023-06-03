@@ -1,14 +1,14 @@
 const router = require("express").Router();
-const { createBook, getAllBooks, getBookById, updateBookById, deleteBookById } = require("../controller/bookController");
+const bookController = require("../controller/bookController");
 
 router.get("/", (req, res) => {
   res.send("Api is working");
 });
 
-router.post("/books", createBook);
-router.get("/books", getAllBooks);
-router.get("/books/:id", getBookById);
-router.put("/books/:id", updateBookById);
-router.delete("/books/:id", deleteBookById);
+router.post("/books", bookController.createBook);
+router.get("/books", bookController.getAllBooks);
+router.get("/books/:id", bookController.getBookById);
+router.put("/books/:id", bookController.updateBookById);
+router.delete("/books/:id", bookController.deleteBookById);
 
 module.exports = router;

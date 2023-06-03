@@ -19,14 +19,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Routes
-app.use("/", router);
+app.use("/api/v1", router);
+app.get("*", (req, res) => {
+  res.status(400).json({
+    msg: "This is a API for book collection. Please visit documenttation for proper routes.",
+  });
+});
 
 // Database connection
 mongoose
   .connect(process.env.DATABASE)
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`Server Running ${PORT}`);
+      console.log("Database connected.");
+      console.log(`Server Running ${PORT}.`);
     });
   })
-  .catch((error) => console.log(error));
+  .catch((error) => console.log("Database connection failed: " + error));
